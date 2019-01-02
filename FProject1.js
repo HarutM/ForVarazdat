@@ -1,8 +1,8 @@
   const canvas = document.getElementById("FinalProject");
-  const context = canvas.getContext('2d');
+  const context = canvas.getContext("2d");
   canvas.width = 1000;
   canvas.height = 550;
-  let score = 0
+  let score = 0;
   const h3 = document.getElementById("score")
   const rand = function(num) {
   return Math.floor(Math.random() * num) + 1;
@@ -31,9 +31,11 @@ const shuriken = {
     draw: function(){
       context.drawImage(this.image, this.x, this.y, this.width, this.height);
     },
-     collision: function(){
-      if (this.x < hero.x + hero.width && this.x + this.width > hero.x && this.y < hero.y + hero.height && 
-                                 this.height + this.y > hero.y){
+     update: function(){
+      if (this.x < Animehero.x + Animehero.width && 
+          this.x + this.width > Animehero.x && 
+          this.y < Animehero.y + Animehero.height && 
+          this.height + this.y > Animehero.y){
                 this.x = rand(canvas.width - this.width);
                 this.y = rand(canvas.height - this.height);
                 score=score+1;
@@ -43,7 +45,7 @@ const shuriken = {
 
 
 
-const hero = {
+const Animehero = {
 		x: 950,
 		y: 400,
 		xDelta: 0,
@@ -81,7 +83,7 @@ const hero = {
   
      
 
-     const orochimaru = function(count, canvasWidth, canvasHeight) {
+     const AnimeBadGuy = function(count, canvasWidth, canvasHeight) {
       const array = [];
     for(let i = 0; i < count; i++){
     
@@ -107,10 +109,10 @@ const hero = {
                              this.x += this.xDelta;
                              this.y += this.yDelta;
             
-                            if (this.x < hero.x + hero.width &&
-                                this.x + this.width > hero.x &&
-                                this.y < hero.y + hero.height &&
-                                this.y + this.height > hero.y){
+                            if (this.x < Animehero.x + Animehero.width &&
+                                this.x + this.width > Animehero.x &&
+                                this.y < Animehero.y + Animehero.height &&
+                                this.y + this.height > Animehero.y){
                                 alert("Game Over!!!!!" + " " + "YOUR SCORE IS  " + score)
                             }
                           }
@@ -121,7 +123,7 @@ const hero = {
 
 	
   
-const boxes = orochimaru(3,canvas.width,canvas.height);
+const boxes = AnimeBadGuy(3,canvas.width,canvas.height);
 const leftKey = 37;
 const upKey = 38;
 const rightKey = 39;
@@ -129,58 +131,68 @@ const downKey = 40;
 
     document.addEventListener('keydown', function(event){
         	if(event.keyCode === rightKey){
-        		hero.xDelta = 5;
+        		Animehero.xDelta = 5;
         	}
             }, false);
 
     document.addEventListener('keydown', function(event){
         	if(event.keyCode === leftKey){
-        		hero.xDelta = -5;
+        		Animehero.xDelta = -5;
         	}
             }, false);
 
     document.addEventListener('keydown', function(event){
         	if(event.keyCode === downKey){
-        		hero.yDelta = 5;
+        		Animehero.yDelta = 5;
         	}
             }, false);
 
     document.addEventListener('keydown', function(event){
         	if(event.keyCode === upKey){
-        		hero.yDelta = -5;
+        		Animehero.yDelta = -5;
         	}
             }, false);
 
     document.addEventListener('keyup', function(event){
-        	hero.xDelta = 0;
+        	Animehero.xDelta = 0;
             }, false);
 
     document.addEventListener('keyup', function(event){
-        	hero.yDelta = 0;
+        	Animehero.yDelta = 0;
             }, false);
 
-    const drawAll = function(array){  
+    const Alldraw = function(array){  
                  for(let i = 0; i < array.length; i = i+1){     
-                  orochimaru(array[i].draw())                  
+                  AnimeBadGuy(array[i].draw())                  
         }               
   }; 
 
     const updateAll =function(array1){
                  for(let i = 0; i < array1.length; i = i+1){
-                  orochimaru(array1[i].update());    
+                  AnimeBadGuy(array1[i].update());    
         }         
   };
 
-  
+let t = 60;
+
+setInterval(function(){
+    t=t-1;
+    if(t <= -1){
+  alert("YOU DID NOT DIE...CONGRATS!!!" + " " + "YOUR SCORE IS  " + score)
+}
+    document.getElementById("time").innerHTML = "SECONDS REMAINING: " + t;
+}, 1000);
+
   const loop = function() {
   	context.drawImage(backImage, 0, 0, canvas.width, canvas.height)    
-    drawAll(boxes);  
+    Alldraw(boxes);     
+    Animehero.draw();   
+    Animehero.update();  
     updateAll(boxes);
-    hero.draw();
-    hero.update();  
+    shuriken.update();
     shuriken.draw();
-    shuriken.collision();
     h3.innerHTML = "SCORE: " + score                          
     requestAnimationFrame(loop);       
-  }   
+  } 
+ 
 loop();
